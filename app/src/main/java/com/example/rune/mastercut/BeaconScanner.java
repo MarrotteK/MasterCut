@@ -1,5 +1,6 @@
 package com.example.rune.mastercut;
 
+        import android.Manifest;
         import android.bluetooth.BluetoothAdapter;
         import android.bluetooth.BluetoothDevice;
         import android.bluetooth.le.BluetoothLeScanner;
@@ -7,21 +8,28 @@ package com.example.rune.mastercut;
         import android.bluetooth.le.ScanRecord;
         import android.bluetooth.le.ScanResult;
         import android.bluetooth.le.ScanSettings;
+        import android.util.Log;
         import android.util.SparseArray;
         import java.nio.ByteBuffer;
         import java.util.Arrays;
         import java.util.UUID;
 
+        import permissions.dispatcher.NeedsPermission;
+        import permissions.dispatcher.RuntimePermissions;
+
 /**
  * original file created by loune from loune.net on 26/12/2015,
  * Full tutorial can be found at https://loune.net/2016/04/building-an-android-phone-connected-door-bell-with-light-blue-beans-ibeacon/
  */
+
 public class BeaconScanner {
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothLeScanner;
-    private OnBeaconDetectedListerner listener;
+    private OnBeaconDetectedListener listener;
 
-    public void setListener(OnBeaconDetectedListerner listener) {
+
+    public void setListener(OnBeaconDetectedListener listener) {
+        Log.d("BEACON","Listener in BeaconScanner works");
         this.listener = listener;
     }
 
@@ -68,6 +76,7 @@ public class BeaconScanner {
 
     public void startScan() {
         bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
+        Log.d("BLUETOOTH", "Scanner started!");
 
         if (bluetoothLeScanner == null) {
             // bluetooth not enabled?
@@ -112,7 +121,8 @@ public class BeaconScanner {
         return uuid;
     }
 
-    public interface OnBeaconDetectedListerner {
+    public interface OnBeaconDetectedListener {
         void onBeaconDetected(BluetoothDevice device, BeaconInfo beaconInfo);
+
     }
 }

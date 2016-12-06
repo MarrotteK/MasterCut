@@ -1,71 +1,97 @@
 package com.example.rune.mastercut;
 
+import android.Manifest;
+import android.bluetooth.BluetoothDevice;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.Toast;
+import com.anthonycr.grant.PermissionsManager;
+import com.anthonycr.grant.PermissionsResultAction;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.logging.LogRecord;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Contract.DBHelper mDbHelper = new Contract.DBHelper(this); //Database initialization, Not sure if this works =\
-
         super.onCreate(savedInstanceState);
+
+        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this,
+                new PermissionsResultAction() {
+                    @Override
+                    public void onGranted() {
+                    }
+                    @Override
+                    public void onDenied(String permission) {
+                    }
+                });
+
+        Contract.DBHelper mDbHelper = new Contract.DBHelper(this); //Database initialization, Not sure if this works yet =\
+
         setContentView(R.layout.activity_main);
 
-        /**
-         * BELOW:  BeaconScanner utilization from loune.net
-         * Not currently working.....
-         *
         BeaconScanner scanner = new BeaconScanner();
-        scanner.setListener(new BeaconScanner.OnBeaconDetectedListerner() {
+        scanner.setListener(new BeaconScanner.OnBeaconDetectedListener(){
             long ignoreUntil = 0;
             @Override
             public void onBeaconDetected(BluetoothDevice device, BeaconInfo beaconInfo) {
+                Log.d("BLUETOOTH", "onBeaconDetected starts, at least");
                 if (beaconInfo.getMajor() == 0 && beaconInfo.getMinor() == 1) {
+                    Log.d("BLUETOOTH", "Beacon Detected");
                     if (ignoreUntil > System.currentTimeMillis())
                         return;
-
-                    // play sound and show snack bar notification
                     try {
-                        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                        Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-                        r.play();
+                        Toast toast = Toast.makeText(getApplicationContext(), "Win Listener works!", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                        toast.show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    Snackbar.make(fab, "GET THE DOOR", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-
-                    // ignore any beacons for the next 3.5 seconds (as we send bursts in the bean)
+                    ignoreUntil = System.currentTimeMillis() + 3500;
+                }
+                if (beaconInfo.getMajor() == 0 && beaconInfo.getMinor() == 2) {
+                    Log.d("BLUETOOTH", "Beacon Detected");
+                    if (ignoreUntil > System.currentTimeMillis())
+                        return;
+                    try {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Lose Listener works!", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                        toast.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     ignoreUntil = System.currentTimeMillis() + 3500;
                 }
             }
         });
         scanner.startScan();
-*/
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Starting Logging Mode...", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Toast toast = Toast.makeText(getApplicationContext(), "It works!", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                toast.show();
             }
         });
+
+
+
 
         //GRAPH STUFF BELOW
 
@@ -92,30 +118,4 @@ public class MainActivity extends AppCompatActivity {
         //GraphView.getViewport().setScalable(true);    Should make graph zoom / scrollable, currently broken
 
     }
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 }
