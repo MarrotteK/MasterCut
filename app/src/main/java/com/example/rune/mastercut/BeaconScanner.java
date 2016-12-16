@@ -13,9 +13,7 @@ package com.example.rune.mastercut;
         import java.nio.ByteBuffer;
         import java.util.Arrays;
         import java.util.UUID;
-
-        import permissions.dispatcher.NeedsPermission;
-        import permissions.dispatcher.RuntimePermissions;
+        import java.util.logging.Logger;
 
 /**
  * original file created by loune from loune.net on 26/12/2015,
@@ -47,6 +45,7 @@ public class BeaconScanner {
             byte[] data = manufacturerData.get(manufacturerId);
 
             if (data.length < 23) {
+                Log.d("BLUETOOTH", "Data length problem?");
                 return;
             }
 
@@ -80,6 +79,7 @@ public class BeaconScanner {
 
         if (bluetoothLeScanner == null) {
             // bluetooth not enabled?
+            Log.d("BLUETOOTH", "bluetoothLeScanner is null apparently");
             return;
         }
 
@@ -114,12 +114,14 @@ public class BeaconScanner {
     }
 
     private static UUID getUUIDFromByteArray(byte[] bytes) {
+        Log.d("BLUETOOTH", "Looking for UUID?");
         ByteBuffer bb = ByteBuffer.wrap(bytes);
         long high = bb.getLong();
         long low = bb.getLong();
         UUID uuid = new UUID(high, low);
         return uuid;
     }
+
 
     public interface OnBeaconDetectedListener {
         void onBeaconDetected(BluetoothDevice device, BeaconInfo beaconInfo);

@@ -27,13 +27,13 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     testCompile 'junit:junit:4.12'
     compile 'com.jjoe64:graphview:4.2.1'    //Graph View courtesy of Jonas Gehring!  androidgraphview.org
-
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta1'
-
     compile 'com.github.hotchemi:permissionsdispatcher:2.2.0'
     apt 'com.github.hotchemi:permissionsdispatcher-processor:2.2.0'
     compile 'com.anthonycr.grant:permissions:1.0'
+    compile 'com.github.satyan:sugar:1.4'
 
 }

@@ -3,7 +3,7 @@
 
 Button winButton = Button(1, INPUT);          //"Win" Button wired to pin 1
 Button loseButton = Button(5, INPUT);         //"Lose" Button wired to pin 5
-uint16_t BEACON_UUID = 0x1337;
+uint16_t BEACON_UUID = 0xDEAD;
 
 void setup() {
   Bean.enableConfigSave(false);               //Saves battery life, clears settings
@@ -16,6 +16,8 @@ void setup() {
 
 void loop() {
   if(winButton.isPressed()){                  //If "Win" button is pressed,
+    Bean.sleep(200);
+    if(winButton.isPressed()){
     Bean.enableAdvertising(false);            //turns off beacon
     Bean.setBeaconParameters(BEACON_UUID, 0, 1);  //advertises UUID minor of 1
     Bean.enableAdvertising(true);             //turns on beacon
@@ -26,7 +28,10 @@ void loop() {
     Bean.enableAdvertising(true);
     Bean.setLed(0,0,0);
   }
+  }
   if(loseButton.isPressed()){                 //If "Lose" button is pressed,
+    Bean.sleep(200);
+    if(loseButton.isPressed()){
     Bean.enableAdvertising(false);            //much the same as above
     Bean.setBeaconParameters(BEACON_UUID, 0, 2);
     Bean.enableAdvertising(true);
@@ -36,6 +41,7 @@ void loop() {
     Bean.setBeaconParameters(BEACON_UUID, 0, 0);
     Bean.enableAdvertising(true);
     Bean.setLed(0,0,0);
+  }
   }
 Bean.sleep(0xFFFFFFFF);}                    //Put device to sleep if not connected
 
